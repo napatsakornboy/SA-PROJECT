@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { MEDICINEInterface,WHEREInterface,DOCTORInterface,BASKETInterface} from "../models/UI";
+import { MEDICINEInterface,WHEREInterface,DOCTORInterface,BASKETInterface,SymtompInterface} from "../models/UI";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -35,6 +35,7 @@ function BASKETCreate() {
    const [MEDICINE_ID, setMEDICINE_ID] = useState('');
    const [DOCTOR_ID, setDOCTOR_ID] = useState('');
    const [WHERE_ID, setWHERE_ID] = useState('');
+   const [Symtomp_ID, setSymtomp_ID] = useState('');
   
   const [Add_time, setDate] = React.useState<Date | null>(null);
   const [BASKET, setBasket] = React.useState<Partial<BASKETInterface>>({});
@@ -73,6 +74,9 @@ const handleChange = (
   };
 
 //สร้างฟังก์ชัน เมื่อเลือก เพศ แล้วให้ setGender(สร้างไว้แล้วข้างบน) 
+const onChangeSymtomp = (event: SelectChangeEvent) => {
+  setSymtomp_ID(event.target.value as string);
+};
   const onChangeWHERE = (event: SelectChangeEvent) => {
     setWHERE_ID(event.target.value as string);
   };
@@ -93,18 +97,19 @@ const handleChange = (
   function submit() {
    let data = {
      //Name: user.Name ?? "",                  //ยังไม่ได้ทำ ดึงมาจากระบบlogin
-     AMOUNT: BASKET.Amount ?? "",           //patient.name คือการดึงค่าจากค่า Name ที่เก็บไว้ข้างใน Patient อีกทีมาใช้
+     AMOUNT: typeof BASKET.ID == "string"? parseInt(BASKET.ID) : 0,           //patient.name คือการดึงค่าจากค่า Name ที่เก็บไว้ข้างใน Patient อีกทีมาใช้
      Add_time: Add_time,
      WHERE_ID: convertType(WHERE_ID),          //GenderID != patient.GenderID บรรทัดนี้ น้ำค่า GenderID ที่ประกาศไว้ด้านบนมาใช้เลย 
      MEDICINE_ID: convertType(MEDICINE_ID),
      DOCTOR_ID: convertType(DOCTOR_ID),
+     Symtomp_ID: convertType(Symtomp_ID),
  
   };
 
     //check data
     console.log(data)
 
-   const apiUrl = "http://localhost:8080/CreatePatient";
+   const apiUrl = "http://localhost:8080/CreateBasket"; 
    const requestOptions = {
      method: "POST",
      headers: { 
@@ -130,15 +135,33 @@ const handleChange = (
      setWHERE_ID("");
      setMEDICINE_ID("");
      setDOCTOR_ID("");
+     setSymtomp_ID("");
 
 
  }
 /////////////////////////////////////////////-_ ส่วนของการโหลดและดึงค่ามาใช้(ใช้กับ Combobox) _-//////////////////////////////////////////////////////////
 
 
+const [Symtomp, setSymtomp] = React.useState<SymtompInterface[]>([]); 
+  const getSymtomp = async () => {
+    const apiUrl = `http://localhost:8080/ListSymtomp`;
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          setSymtomp(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+  };
   const [DOCTOR, setDoctor] = React.useState<DOCTORInterface[]>([]); 
   const getDoctor = async () => {
-    const apiUrl = `http://localhost:8080/ListBlood_type`;
+    const apiUrl = `http://localhost:8080/ListDoctor`;
     const requestOptions = {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -155,7 +178,7 @@ const handleChange = (
   };
   const [WHERE, setWhere] = React.useState<WHEREInterface[]>([]);
   const getWhere= async () => {
-    const apiUrl = `http://localhost:8080/ListDrug_Allergy`;
+    const apiUrl = `http://localhost:8080/ListWhere`;
     const requestOptions = {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -193,6 +216,7 @@ const handleChange = (
       getWhere();
       getDoctor();
       getMedicine();
+      getSymtomp();
     }, []);
 
 
@@ -256,18 +280,18 @@ return (
               <FormControl fullWidth variant="outlined">
                 <Select
                   native
-                  value={MEDICINE_ID}
-                  onChange={onChangeMEDICINE}
+                  value={Symtomp_ID}
+                  onChange={onChangeSymtomp}
                   inputProps={{
-                    name: "MEDICINE_ID",
+                    name: "Symtomp_ID",
                   }}
                 >
                   <option aria-label="None" value="">
-                    กรุณาเลือกยา
+                    กรุณาเลือกผู้ป่วย
                   </option> 
-                      {MEDICINE.map((item: MEDICINEInterface) => (
+                      {Symtomp.map((item: SymtompInterface) => (
                         <option value={item.ID} key={item.ID}>
-                        {item.Name} - {item.So} - {item.Unit}
+                        {item.MAPB_ID}
                           </option>
                       ))}    
                 </Select>
@@ -285,7 +309,7 @@ return (
           {/* <FormControl fullWidth variant="outlined"> */}
             <p>ชื่อยา</p>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={7}>
               <FormControl fullWidth variant="outlined">
                 <Select
                   native
@@ -310,7 +334,7 @@ return (
             <Grid item xs={0}>
                   <p>จำนวน</p>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <FormControl fullWidth variant="outlined">
                     <TextField
                       id="ID"
@@ -330,24 +354,24 @@ return (
 
        <Grid item xs={1}>
           {/* <FormControl fullWidth variant="outlined"> */}
-            <p>ชื่อยา</p>
+            <p>รับยา</p>
             </Grid>
             <Grid item xs={10}>
               <FormControl fullWidth variant="outlined">
                 <Select
                   native
-                  value={MEDICINE_ID}
-                  onChange={onChangeMEDICINE}
+                  value={WHERE_ID}
+                  onChange={onChangeWHERE}
                   inputProps={{
-                    name: "MEDICINE_ID",
+                    name: "WHERE_ID",
                   }}
                 >
                   <option aria-label="None" value="">
-                    กรุณาเลือกยา
+                    กรุณาเลือกสถานที่
                   </option> 
-                      {MEDICINE.map((item: MEDICINEInterface) => (
+                      {WHERE.map((item: WHEREInterface) => (
                         <option value={item.ID} key={item.ID}>
-                        {item.Name} - {item.So} - {item.Unit}
+                        {item.Name}
                          </option>
                       ))}    
                 </Select>
@@ -355,6 +379,51 @@ return (
             </Grid>
 
        </Grid>
+
+       <Grid container spacing={2} sx={{ padding: 2 }}>
+
+       <Grid item xs={1}>
+          {/* <FormControl fullWidth variant="outlined"> */}
+            <p>ผู้จ่าย</p>
+            </Grid>
+            <Grid item xs={10}>
+              <FormControl fullWidth variant="outlined">
+                <Select
+                  native
+                  value={DOCTOR_ID}
+                  onChange={onChangeDOCTOR}
+                  inputProps={{
+                    name: "DOCTOR_ID",
+                  }}
+                >
+                  <option aria-label="None" value="">
+                    กรุณาเลือกผู้จ่ายยา
+                  </option> 
+                      {DOCTOR.map((item: DOCTORInterface) => (
+                        <option value={item.ID} key={item.ID}>
+                        {item.Name} - {item.Title}
+                         </option>
+                      ))}    
+                </Select>
+              </FormControl>
+            </Grid>
+
+       </Grid>
+
+       <Grid item xs={12}>
+           <Button component={RouterLink} to="/" variant="contained">
+             ย้อนกลับ
+           </Button>
+           <Button
+             size="large"
+             style={{ float: "right" }}
+             onClick={submit}
+             variant="contained"
+             color="success"
+           >
+             <b>บันทึก</b>
+           </Button>
+         </Grid>
      </Paper>
    </Container>
  );

@@ -35,7 +35,7 @@ func CreateWhere(c *gin.Context) {
 func GetWhere(c *gin.Context) {
 	var GetWhere entity.WHERE
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM where WHERE id = ?", id).Scan(&GetWhere).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM wheres WHERE id = ?", id).Scan(&GetWhere).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -47,7 +47,7 @@ func GetWhere(c *gin.Context) {
 func ListWhere(c *gin.Context) {
 
 	var where []entity.WHERE
-	if err := entity.DB().Raw("SELECT * FROM where").Scan(&where).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM wheres").Scan(&where).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

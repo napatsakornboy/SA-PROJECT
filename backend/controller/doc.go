@@ -35,7 +35,7 @@ func CreateDoctor(c *gin.Context) {
 func GetDoctor(c *gin.Context) {
 	var GetDoctor entity.DOCTOR
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM doctor WHERE id = ?", id).Scan(&GetDoctor).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM doctors WHERE id = ?", id).Scan(&GetDoctor).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -46,7 +46,7 @@ func GetDoctor(c *gin.Context) {
 func ListDoctor(c *gin.Context) {
 
 	var doctor []entity.DOCTOR
-	if err := entity.DB().Raw("SELECT * FROM doctor").Scan(&doctor).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM doctors").Scan(&doctor).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -28,6 +28,9 @@ type BASKET struct {
 	MEDICINE_ID *uint
 	MEDICINE    MEDICINE `gorm:"references:id"`
 
+	Symtomp_ID *uint
+	Symtomp    Symtomp `gorm:"references:id"`
+
 	//รอแอดของพืชที่เป็น FK heck_ID
 }
 
@@ -58,4 +61,5 @@ type Symtomp struct {
 	Check_Owner string
 	Level_ID    string
 	Medicine    string
+	BASKETS     []BASKET `gorm:"foreignKey:Symtomp_ID"`
 }

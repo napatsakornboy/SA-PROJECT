@@ -23,6 +23,9 @@ func main() {
 
 	r.GET("/ListBasket", controller.ListBasket)
 	r.POST("/CreateBasket", controller.CreateBasket)
+
+	r.GET("/ListSymtomp", controller.ListSymtomp)
+	r.POST("/CreateSymtomp", controller.CreateSymtomp)
 	r.Run()
 
 }
