@@ -12,8 +12,6 @@ import IconButton from "@mui/material/IconButton";
 
 import MenuIcon from "@mui/icons-material/Menu";
 
- // vghnbgh
- ///dsfkjsdkjdhskfd
 function Navbar() {
 
  return (
@@ -44,7 +42,7 @@ function Navbar() {
 
          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 
-           System Analysis and Design
+           ระบบจ่ายยาผู้ป่วยใน
 
          </Typography>
 

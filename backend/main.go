@@ -12,19 +12,19 @@ func main() {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
-	r.GET("/ListMed", controller.ListMed)
-	r.POST("/CreateMed", controller.CreateMed)
+	r.GET("/ListMedicine", controller.ListMedicine)
+	r.POST("/CreateMedicine", controller.CreateMedicine)
 
 	r.GET("/ListWhere", controller.ListWhere)
 	r.POST("/CreateWhere", controller.CreateWhere)
 
-	r.GET("/ListDoc", controller.ListDoc)
-	r.POST("/CreateDoc", controller.CreateDoc)
+	r.GET("/ListDoctor", controller.ListDoctor)
+	r.POST("/CreateDoctor", controller.CreateDoctor)
 
 	r.GET("/ListBasket", controller.ListBasket)
 	r.POST("/CreateBasket", controller.CreateBasket)
 	r.Run()
-	
+
 }
 func CORSMiddleware() gin.HandlerFunc {
 
