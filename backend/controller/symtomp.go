@@ -35,7 +35,7 @@ func CreateSymtomp(c *gin.Context) {
 func GetSymtomp(c *gin.Context) {
 	var GetSymtomp entity.Symtomp
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM symtomps WHERE id = ?", id).Scan(&GetSymtomp).Error; err != nil {
+	if err := entity.DB().Preload("Symptom").Raw("SELECT * FROM symtomps WHERE id = ?", id).Scan(&GetSymtomp).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

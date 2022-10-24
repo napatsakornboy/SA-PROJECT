@@ -37,9 +37,9 @@ export interface SymtompInterface {
 	Pressure:    number,
 	Heartrate:   number,
 	Comment:     string,
-	MAPB_ID:     string,
-	Check_Owner: string,
-	Level_ID:    string,
+	Mapb:     string,
+	Check: string,
+	LevelID:    string,
 	Medicine:    string,
     
     

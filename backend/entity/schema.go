@@ -52,14 +52,14 @@ type MEDICINE struct {
 
 type Symtomp struct {
 	gorm.Model
-	Check_Date  string
+	Check_Date  time.Time
 	Temperature int
 	Pressure    int
-	Heartrate   int
+	Heart_rate   int
 	Comment     string
-	MAPB_ID     string
-	Check_Owner string
-	Level_ID    string
 	Medicine    string
+	Mapb	     string
+	Check		string
+	LevelID    string
 	BASKETS     []BASKET `gorm:"foreignKey:Symtomp_ID"`
 }
