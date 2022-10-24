@@ -291,7 +291,8 @@ return (
                   </option> 
                       {Symtomp.map((item: SymtompInterface) => (
                         <option value={item.ID} key={item.ID}>
-                        เตียง {item.Mapb} - 
+                        เตียง {item.Mapb} - ชื่อ 
+                        {/* {item.Mapb.Triage.Patient.Patient_Name} */}
                           </option>
                       ))}    
                 </Select>
